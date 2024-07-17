@@ -5,8 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Docusoft Extract</title>
+    <link rel="stylesheet" href="index.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- Select2 dropdown icon -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" /> -->
+
     <!--DevexTream-->
     <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.6/css/dx.common.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.1.6/css/dx.light.css" />
@@ -20,90 +33,335 @@
 </head>
 
 <body>
-    <div name="modal-div">
-  <!-- Modal -->
-  <div id="type-selector-modal" class="modal fade show" style="display: none;">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5">What you want to precess ?</h1>
-          <!-- <button type="button" class="btn-close"></button> -->
-        </div>
-        <div class="modal-body">
-          <div class="flex">
-            <button id="modal-bank-sts-btn" class="btn btn-primary">Bank Statement</button>
-            <button id="modal-invoice-rps-btn" class="btn btn-outline-primary">Invoice Receipts</button>
-          </div>
-          <hr/>
-          <h1 class="modal-title fs-5">Attachments</h1>
-          <br/>
-          <div id="dms-attachs-list" ></div>
-          <div class="text-end">
-            <button id="process-dms-docs" class="btn btn-primary d-none">Convert</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-    </div>
-    <div>
-        <select id="type_selector">
-            <option value="">Bank Statements</option>
-            <option value="Invoice">Invoice Receipt</option>
-        </select>
-    </div>
-    <hr />
-    <div id="selected-doc-list">
 
-    </div>
-    <hr />
-    <div id="input-type-div">
-        <input type="file" name="" id="bankStatements" multiple />
-    </div>
-    <!-- <div>
+
+
+    <div class="container-fluid mt-3">
+        <div class=" row">
+            <div class=" col-3">
+                <div class="form-group custom-select-icon">
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option value="Invoice" selected class="input_field">Invoice</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+
+                <div class="white-box ">
+
+                    <div class=" d-flex justify-content-between selected_file_uplode">
+                        <div class="d-flex selected-file align-items-center">
+                            <div class=" select-item">
+                                <span>12</span>
+                            </div>
+                            <h4 class=" select-item-1">File Uploded</h4>
+                        </div>
+
+                        <div>
+                            <!-- <div id="input-type-div">
+                                <input type="file" name="" id="bankStatements" multiple />
+                            </div> -->
+                            <div  class="input-group mb-3">
+                                <input type="file"  class="form-control visually-hidden" id="bankStatements" multiple>
+                                <label class="btn-blue mb-1 me-1" for="bankStatements">
+                                    <span class="material-symbols-outlined">
+                                        add
+                                    </span>
+                                    Add
+                                </label>
+                            </div>
+                            <!-- <button type="button" class="btn-blue mb-1 me-1">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span>
+                                </span>
+                                Add
+                            </button> -->
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class=" d-flex">
+
+                        <div class="form-check d-flex align-items-center justify-content-between mx-2">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+
+                            </label>
+                        </div>
+                        <div class="file-uploads-2 mt-2">
+                            <label class="file-uploads-label file-uploads-document sadik">
+                                <div class=" d-flex justify-content-between align-items-center w-100">
+
+                                    <div class=" d-flex align-items-center">
+                                        <div class='img-format'>
+                                            <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                                        </div>
+
+                                        <div class="upload-content">
+                                            <h4>Demo</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearrfix">
+                                        <span class="dropdown">
+                                            <span class="dropdown-toggle dropdoun_border toggle-none"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="material-symbols-outlined mt-2">
+                                                    more_vert
+                                                </span>
+                                            </span>
+                                            <ul class="dropdown-menu">
+
+                                                <li><a class="dropdown-item" href="#"><span
+                                                            class="material-symbols-outlined">
+                                                            edit_note
+                                                        </span>Rename</a>
+                                                </li>
+
+                                                <li><a class="dropdown-item" href="#"><span
+                                                            class="material-symbols-outlined">
+                                                            close
+                                                        </span>
+                                        </span>Remove</a>
+                                        </li>
+
+
+                                        </ul>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                    <div class=" d-flex justify-content-between selected_file_remove">
+                        <div class="d-flex selected-file align-items-center">
+                            <div class=" select-item">
+                                <span>12</span>
+                            </div>
+                            <h4 class=" select-item-1">File Selected</h4>
+                        </div>
+
+
+
+                        <div class=" ms-3">
+                            <button type="button" class="btn-blue mb-1 me-1">
+                                <span class="material-symbols-outlined">
+                                    close
+
+                            </button>
+
+                            <button type="button" class="btn-blue mb-1 me-1">
+                                <span class="material-symbols-outlined">
+                                    delete
+                                </span>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class=" col-9 white-box-1">
+                <div class=" d-flex  d-flex justify-content-between">
+                    <div class=" d-flex">
+                        <div class="form-group custom-select-icon" style="width: 300px;">
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option value="Selected View" selected class="input_field">Selected View</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button type="button" class="btn-blue mb-1 me-1 ms-2">
+                                <span class="material-symbols-outlined">
+                                    preview
+                                </span>
+                                </span>
+                                Save View
+                            </button>
+
+                            <button type="button" class="btn-blue mb-1 me-1 ms-2">
+                                <span class="material-symbols-outlined">
+                                    delete
+                                </span>
+                                </span>
+                                Delete View
+                            </button>
+                        </div>
+
+                    </div>
+                    <div>
+                        <button type="button" class="btn-blue mb-1 me-1">
+                            <i class="nav-icons material-symbols-outlined">
+                                rebase_edit
+                            </i>
+                            </span>
+                            Process
+                        </button>
+
+                        <button type="button" class="btn-blue mb-1 me-1">
+
+                            <div class="clearrfix">
+                                <span class="dropdown">
+                                    <span class="dropdown-toggle dropdoun_border toggle-none" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <span class="material-symbols-outlined " style=" border-right: 1px;">
+                                            download
+                                        </span>
+                                        Download
+
+                                    </span>
+                                    <ul class="dropdown-menu">
+
+                                        <li><a class="dropdown-item" href="#"><span class="material-symbols-outlined">
+                                                    csv
+                                                </span>
+                                </span>Download CSV</a>
+                                </li>
+
+                                <li><a class="dropdown-item" href="#"><span class="material-symbols-outlined">
+                                            description
+                                        </span>
+                                        </span>Download Excel</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#"><span class="material-symbols-outlined">
+                                            description
+                                        </span>
+                                        </span>Download Report</a>
+                                </li>
+                                </ul>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="custom-table mt-5 border">
+                    <div>
+                        <div class="demo-container">
+                            <div id="gridContainer"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div id="loopGrid-container">
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <hr />
+        <h2>Old Code</h2>
+
+
+        <div name="modal-div">
+            <!-- Modal -->
+            <div id="type-selector-modal" class="modal fade show" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5">What you want to precess ?</h1>
+                            <!-- <button type="button" class="btn-close"></button> -->
+                        </div>
+                        <div class="modal-body">
+                            <div class="flex">
+                                <button id="modal-bank-sts-btn" class="btn btn-primary">Bank Statement</button>
+                                <button id="modal-invoice-rps-btn" class="btn btn-outline-primary">Invoice
+                                    Receipts</button>
+                            </div>
+                            <hr />
+                            <h1 class="modal-title fs-5">Attachments</h1>
+                            <br />
+                            <div id="dms-attachs-list"></div>
+                            <div class="text-end">
+                                <button id="process-dms-docs" class="btn btn-primary d-none">Convert <div
+                                        id="loading-spinner" class="d-none spinner-border spinner-border-sm text-dark"
+                                        role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <select id="type_selector">
+                <option value="">Bank Statements</option>
+                <option value="Invoice">Invoice Receipt</option>
+            </select>
+        </div>
+        <hr />
+        <div id="selected-doc-list">
+
+        </div>
+        <hr />
+        <div id="input-type-div">
+            <input type="file" name="" id="bankStatements" multiple />
+        </div>
+        <!-- <div>
         <input type="text" placeholder="Job Name" name="jobname" id="jobname" />
     </div>
     <div>
         <input type="text" name="tag" placeholder="Type to create a new tag" id="tagname" />
     </div> -->
-    <div>
-        <button type="button" id="abcabc">Convert</button>
-    </div>
-    <div>
-        <!-- <button type="button" id="Invoice_Test">Invoice Test</button> -->
-        <button type="button" id="Invoice_Test">Convert</button>
-    </div>
-    <hr />
-    <div id="customTable"></div>
-    <hr />
-
-    <div>
-        <div class="demo-container">
-            <div id="gridContainer"></div>
+        <div>
+            <button type="button" id="abcabc">Convert</button>
         </div>
-    </div>
-
-    <div>
-        <div id="loopGrid-container">
-
+        <div>
+            <!-- <button type="button" id="Invoice_Test">Invoice Test</button> -->
+            <button type="button" id="Invoice_Test">Convert</button>
         </div>
-    </div>
+        <hr />
+        <div id="customTable"></div>
+        <hr />
 
-    <!-- Bootstrap cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+        <div>
+            <div class="demo-container">
+                <div id="gridContainer"></div>
+            </div>
+        </div>
 
-    <!-- Axios cdn   -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
-        integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <div>
+            <div id="loopGrid-container">
 
-    <script src="main.js"></script>
-    <!-- <script src="testjs.js"></script> -->
+            </div>
+        </div>
+
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+        <!-- <script src="https://cdn3.devexpress.com/jslib/20.1.6/js/dx.all.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/xlsx@latest/dist/xlsx.full.min.js"></script> -->
+
+        <!-- Axios cdn   -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js"
+            integrity="sha512-JSCFHhKDilTRRXe9ak/FJ28dcpOJxzQaCd3Xg8MyF6XFjODhy/YMCM8HW0TFDckNHWUewW+kfvhin43hKtJxAw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="main.js"></script>
+        <!-- <script src="testjs.js"></script> -->
 </body>
 
 </html>

@@ -214,7 +214,7 @@ $(document).ready(function () {
       });
 
     if (dmsDocIds.length > 0) {
-        $("#type-selector-modal").css("display", "block");
+        // $("#type-selector-modal").css("display", "block");
         dmsDocIds.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_SearchDocById", {
@@ -289,7 +289,8 @@ $(document).ready(function () {
     })
 
     $("#process-dms-docs").on("click", function () {
-        $("#type-selector-modal").css("display", "none");
+        // $("#type-selector-modal").css("display", "none");
+        $("#loading-spinner").removeClass("d-none");
         dmsDocResult.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
@@ -335,6 +336,8 @@ $(document).ready(function () {
             },
                 Promise.resolve()
             ).then(res => {
+                $("#type-selector-modal").css("display", "none");
+                $("#loading-spinner").addClass("d-none");
                 renderInvoiceDataGrid("gridContainer",dmsInvoiceConvertedData.flat());
             }).catch(err => {
                 console.log("Error while calling Json_GetItemBase64DataById", err);
