@@ -18,7 +18,7 @@ const idsString = urlSearchParams.get('ids');
 
 let dmsDocIds = [];
 
-if (idsString.length > 0) {
+if (idsString && idsString.length > 0) {
     dmsDocIds = idsString.split(",")
 }
 
@@ -226,7 +226,7 @@ $(document).ready(function () {
       });
 
     if (dmsDocIds.length > 0) {
-        // $("#type-selector-modal").css("display", "block");
+        $("#type-selector-modal").css("display", "block");
         dmsDocIds.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_SearchDocById", {
