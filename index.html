@@ -40,38 +40,34 @@
         <div class=" row">
             <div class=" col-3">
                 <div class="form-group custom-select-icon">
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        <option value="Invoice" selected class="input_field">Invoice</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                    <select id="type_selector" class="form-control">
+                        <option value="" class="input_field">Bank Statements</option>
+                        <option value="Invoice" class="input_field">Invoice</option>  
                     </select>
                 </div>
 
                 <div class="white-box ">
 
-                    <div class=" d-flex justify-content-between selected_file_uplode">
-                        <div class="d-flex selected-file align-items-center">
+                    <div class=" d-flex justify-content-end selected_file_uplode">
+                        <!-- <div class="d-flex selected-file align-items-center">
                             <div class=" select-item">
                                 <span>12</span>
                             </div>
                             <h4 class=" select-item-1">File Uploded</h4>
-                        </div>
+                        </div> -->
 
                         <div>
                             <!-- <div id="input-type-div">
                                 <input type="file" name="" id="bankStatements" multiple />
                             </div> -->
-                            <div  class="input-group mb-3">
-                                <input type="file"  class="form-control visually-hidden" id="bankStatements" multiple>
+                            <div id="input-type-div" class="input-group mb-1">
+                                <!-- <input type="file"  class="form-control visually-hidden" id="bankStatements" multiple>
                                 <label class="btn-blue mb-1 me-1" for="bankStatements">
                                     <span class="material-symbols-outlined">
                                         add
                                     </span>
                                     Add
-                                </label>
+                                </label> -->
                             </div>
                             <!-- <button type="button" class="btn-blue mb-1 me-1">
                                 <span class="material-symbols-outlined">
@@ -81,67 +77,84 @@
                                 Add
                             </button> -->
                         </div>
+                        <div>
+                            <button id="abcabc" type="button" class="btn-blue mb-1 me-1">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span>
+                                </span>
+                                Extract
+                            </button>
+                            <button id="Invoice_Test" type="button" class="btn-blue mb-1 me-1">
+                                <span class="material-symbols-outlined">
+                                    add
+                                </span>
+                                </span>
+                                Extract
+                            </button>
+                        </div>
                     </div>
                     <hr />
 
-                    <div class=" d-flex">
+                    <div id="selected-doc-list">
+                        <!-- <div class=" d-flex">
 
-                        <div class="form-check d-flex align-items-center justify-content-between mx-2">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-
-                            </label>
-                        </div>
-                        <div class="file-uploads-2 mt-2">
-                            <label class="file-uploads-label file-uploads-document sadik">
-                                <div class=" d-flex justify-content-between align-items-center w-100">
-
-                                    <div class=" d-flex align-items-center">
-                                        <div class='img-format'>
-                                            <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                            <div class="form-check d-flex align-items-center justify-content-between mx-2">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+    
+                                </label>
+                            </div>
+                            <div class="file-uploads-2 mt-2">
+                                <label class="file-uploads-label file-uploads-document sadik">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="d-flex align-items-center">
+                                            <div class='img-format'>
+                                                <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                                            </div>
+    
+                                            <div class="upload-content">
+                                                <h4>Demo</h4>
+                                            </div>
                                         </div>
-
-                                        <div class="upload-content">
-                                            <h4>Demo</h4>
-                                        </div>
-                                    </div>
-
-                                    <div class="clearrfix">
-                                        <span class="dropdown">
-                                            <span class="dropdown-toggle dropdoun_border toggle-none"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="material-symbols-outlined mt-2">
-                                                    more_vert
+    
+                                        <div class="clearrfix">
+                                            <span class="dropdown">
+                                                <span class="dropdown-toggle dropdoun_border toggle-none"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-symbols-outlined mt-2">
+                                                        more_vert
+                                                    </span>
                                                 </span>
+                                                <ul class="dropdown-menu">
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                edit_note
+                                                            </span>Rename</a>
+                                                    </li>
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                close
+                                                            </span>
+                                            </span>Remove</a>
+                                            </li>
+    
+    
+                                            </ul>
                                             </span>
-                                            <ul class="dropdown-menu">
-
-                                                <li><a class="dropdown-item" href="#"><span
-                                                            class="material-symbols-outlined">
-                                                            edit_note
-                                                        </span>Rename</a>
-                                                </li>
-
-                                                <li><a class="dropdown-item" href="#"><span
-                                                            class="material-symbols-outlined">
-                                                            close
-                                                        </span>
-                                        </span>Remove</a>
-                                        </li>
-
-
-                                        </ul>
-                                        </span>
+                                        </div>
+    
                                     </div>
-
-                                </div>
-                            </label>
-                        </div>
+                                </label>
+                            </div>
+                        </div> -->
                     </div>
 
 
 
-                    <div class=" d-flex justify-content-between selected_file_remove">
+                    <!-- <div class=" d-flex justify-content-between selected_file_remove">
                         <div class="d-flex selected-file align-items-center">
                             <div class=" select-item">
                                 <span>12</span>
@@ -165,7 +178,7 @@
                                 Delete
                             </button>
                         </div>
-                    </div>
+                    </div> -->
 
 
                 </div>
@@ -203,7 +216,7 @@
                         </div>
 
                     </div>
-                    <div>
+                    <!-- <div>
                         <button type="button" class="btn-blue mb-1 me-1">
                             <i class="nav-icons material-symbols-outlined">
                                 rebase_edit
@@ -246,7 +259,7 @@
                                 </span>
                             </div>
                         </button>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="custom-table mt-5 border">
@@ -268,8 +281,15 @@
         </div>
 
 
+
+
+
         <hr />
         <h2>Old Code</h2>
+
+
+
+
 
 
         <div name="modal-div">
@@ -334,7 +354,7 @@
         <div id="customTable"></div>
         <hr />
 
-        <div>
+        <!-- <div>
             <div class="demo-container">
                 <div id="gridContainer"></div>
             </div>
@@ -344,7 +364,7 @@
             <div id="loopGrid-container">
 
             </div>
-        </div>
+        </div> -->
 
         <!-- Bootstrap JS and dependencies -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

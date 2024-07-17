@@ -121,7 +121,7 @@ function renderInvoiceDataGrid(targetGrid, Data) {
             { dataField: "price", caption: "Price" },
             { dataField: "service", caption: "Service" },
             { dataField: "category", caption: "Category" },
-            { dataField: "customer", caption: "Customer" },
+            { dataField: "customerExcel", caption: "Customer" },
             { dataField: "vendorExcel", caption: "Vendor" },
         ],
         selection: {
@@ -187,11 +187,23 @@ async function sendInvoice(event, file) {
 function getInputType() {
     let inputType = $("#type_selector").val();
     if (inputType === '') {
-        $("#input-type-div").html(`<input type="file" name="" id="bankStatements"/>`);
+        $("#input-type-div").html(`<input type="file" class="form-control visually-hidden" id="bankStatements">
+                                <label class="btn-blue mb-1 me-1" for="bankStatements">
+                                    <span class="material-symbols-outlined">
+                                        add
+                                    </span>
+                                    Add
+                                </label>`);
         $("#Invoice_Test").hide();
         $("#abcabc").show();
     } else if (inputType === 'Invoice') {
-        $("#input-type-div").html(`<input type="file" name="" id="bankStatements" multiple/>`);
+        $("#input-type-div").html(`<input type="file" class="form-control visually-hidden" id="bankStatements" multiple>
+                                <label class="btn-blue mb-1 me-1" for="bankStatements">
+                                    <span class="material-symbols-outlined">
+                                        add
+                                    </span>
+                                    Add
+                                </label>`);
         $("#Invoice_Test").show();
         $("#abcabc").hide();
     }
@@ -352,23 +364,72 @@ $(document).ready(function () {
     })
     $(document).on("change", "#bankStatements", function (e) {
         let allFiles = this.files;
-        $("#selected-doc-list").html("<h3>Selected Documents</h3>");
+        // Object.keys(allFiles).length > 0 ? $("#type_selector").attr("disabled","true") : $("#type_selector").attr("disabled","false");
+        $("#selected-doc-list").html("");
         for (let i = 0; i < allFiles.length; i++) {
-            $("#selected-doc-list").append(`<p>${allFiles[i].name}<p>`);
+            $("#selected-doc-list").append(`<div class=" d-flex">
+
+                            <!-- <div class="form-check d-flex align-items-center justify-content-between mx-2">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+    
+                                </label>
+                            </div> -->
+                            <div class="file-uploads-2 mt-2">
+                                <label class="file-uploads-label file-uploads-document sadik">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="d-flex align-items-center">
+                                            <div class='img-format'>
+                                                <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                                            </div>
+    
+                                            <div class="upload-content">
+                                                <h4>${allFiles[i].name}</h4>
+                                            </div>
+                                        </div>
+    
+                                        <!-- <div class="clearrfix">
+                                            <span class="dropdown">
+                                                <span class="dropdown-toggle dropdoun_border toggle-none"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-symbols-outlined mt-2">
+                                                        more_vert
+                                                    </span>
+                                                </span>
+                                                <ul class="dropdown-menu">
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                edit_note
+                                                            </span>Rename</a>
+                                                    </li>
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                close
+                                                            </span>
+                                            </span>Remove</a>
+                                            </li>
+    
+    
+                                            </ul>
+                                            </span>
+                                        </div>  -->
+    
+                                    </div>
+                                </label>
+                            </div>
+                        </div>`);
         }
+        // $("#selected-doc-list").append(`<p>${allFiles[i].name}<p>`);
     })
     $("#abcabc").on("click", function (event) {
         event.preventDefault();
-        $("#gridContainer").html("");
-        $("#loopGrid-container").html("");
         sendDoc(event);
     })
     $("#Invoice_Test").on("click", async function (event) {
         event.preventDefault();
-        $("#gridContainer").html("");
-        $("#loopGrid-container").html("");
         formData = "";
-        $("#loopGrid-container").html("");
         let allFiles = document.getElementById("bankStatements").files;
         delete allFiles["length"];
         let results = [];
@@ -399,9 +460,9 @@ $(document).ready(function () {
         },
             Promise.resolve()
         ).then(res => {
-            $("#loopGrid-container").html("");
+            // $('#gridContainer').dxDataGrid('instance').destroy()
             const gridJson = results.flat();
-            renderInvoiceDataGrid(`gridContainer`, gridJson);
+            renderInvoiceDataGrid("gridContainer", gridJson);
             //  Code for individual Invoices grid container - starts here - *** Don't remove this code ***
             // results.map((resResult,i)=>{
             //     $("#loopGrid-container").append(`<div id="gridContainer_${i}"></div><hr/>`);
