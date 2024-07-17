@@ -318,7 +318,25 @@ $(document).ready(function () {
     })
 
     $("#process-dms-docs-bank-sts").on("click", function () {
-        alert("It's Working")
+        dmsDocBase64Result = [];
+        $("#loading-spinner").removeClass("d-none");
+        axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
+            "agrno": "0003",
+            "Email": "patrick@docusoft.net",
+            "password": "UGF0cmljazEyMy4=",
+            "ItemId": dmsDocResult[0]["Registration No."]
+        }).then(res => {
+            let docBase64 = res.data.d;
+            axios.post(`http://localhost:3001/processDmsDoc`, { base64: docBase64 }).then(function (res) {
+                $("#type-selector-modal").css("display", "none");
+                $("#gridContainer").removeClass("d-none");
+                $("#invoiceGridContainer").addClass("d-none");
+                $("#loading-spinner").addClass("d-none");
+                renderDataGrid(res.data.transactions);
+            }).catch(function (err) {
+                console.log("Api failed", err);
+            });
+        }).catch(err => console.log("Error while calling JSON_GetItemBase64Data", err))
     })
 
     $("#process-dms-docs").on("click", function () {
