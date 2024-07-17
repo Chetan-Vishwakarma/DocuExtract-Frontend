@@ -152,6 +152,8 @@ function sendDoc(event) {
     event.preventDefault();
     axios.post(url, formData)
         .then(response => {
+            $("#Loading").addClass("d-none");
+            $('#gridContainer').removeClass("d-none");
             renderDataGrid(response.data.transactions);
         })
         .catch(error => {
@@ -176,7 +178,7 @@ async function sendInvoice(event, file) {
             let data = tempObj.map(itm => {
                 return { ...testObj, ...itm }
             });
-            renderInvoiceDataGrid("gridContainer", data);
+            renderInvoiceDataGrid("invoiceGridContainer", data);
 
         })
         .catch(error => {
@@ -214,7 +216,7 @@ function showDmsDocList(dmsDocsList) {
     dmsDocsList.map(itm => {
         $("#dms-attachs-list").append(`<p>${itm.Description}.${itm.Type}</p>`);
     });
-    $("#process-dms-docs").removeClass("d-none");
+    // $("#process-dms-docs").removeClass("d-none");
 }
 
 
@@ -223,10 +225,17 @@ $(document).ready(function () {
 
     axios.get(`http://localhost:3001/allJobs`).then(res => {
         console.log("All Jobs", res.data);
-      });
+    });
 
     if (dmsDocIds.length > 0) {
+
         $("#type-selector-modal").css("display", "block");
+
+        if ($("#modal-bank-sts-btn").hasClass("btn-primary")) {
+            $("#process-dms-docs-bank-sts").removeClass("d-none");
+            $("#process-dms-docs").addClass("d-none");
+        }
+
         dmsDocIds.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_SearchDocById", {
@@ -288,20 +297,35 @@ $(document).ready(function () {
         // $("#type-selector-modal").css("display", "none");
         $(this).addClass("btn-primary");
         $(this).removeClass("btn-outline-primary");
+
         $("#modal-invoice-rps-btn").addClass("btn-outline-primary");
         $("#modal-invoice-rps-btn").removeClass("btn-primary");
+
+        $("#process-dms-docs-bank-sts").removeClass("d-none");
+        $("#process-dms-docs").addClass("d-none");
     })
 
     $("#modal-invoice-rps-btn").on("click", function () {
         // $("#type-selector-modal").css("display", "none");
         $(this).addClass("btn-primary");
         $(this).removeClass("btn-outline-primary");
+
         $("#modal-bank-sts-btn").addClass("btn-outline-primary");
         $("#modal-bank-sts-btn").removeClass("btn-primary");
+
+        $("#process-dms-docs-bank-sts").addClass("d-none");
+        $("#process-dms-docs").removeClass("d-none");
+    })
+
+    $("#process-dms-docs-bank-sts").on("click", function () {
+        alert("It's Working")
     })
 
     $("#process-dms-docs").on("click", function () {
         // $("#type-selector-modal").css("display", "none");
+        dmsDocBase64Result = [];
+        $("#gridContainer").addClass("d-none");
+        $("#invoiceGridContainer").addClass("d-none");
         $("#loading-spinner").removeClass("d-none");
         dmsDocResult.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
@@ -349,8 +373,9 @@ $(document).ready(function () {
                 Promise.resolve()
             ).then(res => {
                 $("#type-selector-modal").css("display", "none");
+                $("#invoiceGridContainer").removeClass("d-none");
                 $("#loading-spinner").addClass("d-none");
-                renderInvoiceDataGrid("gridContainer",dmsInvoiceConvertedData.flat());
+                renderInvoiceDataGrid("invoiceGridContainer", dmsInvoiceConvertedData.flat());
             }).catch(err => {
                 console.log("Error while calling Json_GetItemBase64DataById", err);
             });
@@ -365,6 +390,14 @@ $(document).ready(function () {
     $(document).on("change", "#bankStatements", function (e) {
         let allFiles = this.files;
         // Object.keys(allFiles).length > 0 ? $("#type_selector").attr("disabled","true") : $("#type_selector").attr("disabled","false");
+        if (Object.keys(allFiles).length > 0) {
+            $("#abcabc").removeAttr("disabled").removeClass("opacity-5");
+            $("#Invoice_Test").removeAttr("disabled").removeClass("opacity-5");
+        } else {
+            $("#abcabc").attr("disabled", "true").addClass("opacity-5");
+            $("#Invoice_Test").attr("disabled", "true").addClass("opacity-5");
+        }
+
         $("#selected-doc-list").html("");
         for (let i = 0; i < allFiles.length; i++) {
             $("#selected-doc-list").append(`<div class=" d-flex">
@@ -425,9 +458,13 @@ $(document).ready(function () {
     })
     $("#abcabc").on("click", function (event) {
         event.preventDefault();
+        $("#Loading").removeClass("d-none");
+        $('#invoiceGridContainer').addClass("d-none");
         sendDoc(event);
     })
     $("#Invoice_Test").on("click", async function (event) {
+        $("#Loading").removeClass("d-none");
+        $('#gridContainer').addClass("d-none");
         event.preventDefault();
         formData = "";
         let allFiles = document.getElementById("bankStatements").files;
@@ -461,8 +498,10 @@ $(document).ready(function () {
             Promise.resolve()
         ).then(res => {
             // $('#gridContainer').dxDataGrid('instance').destroy()
+            $("#Loading").addClass("d-none");
+            $('#invoiceGridContainer').removeClass("d-none");
             const gridJson = results.flat();
-            renderInvoiceDataGrid("gridContainer", gridJson);
+            renderInvoiceDataGrid("invoiceGridContainer", gridJson);
             //  Code for individual Invoices grid container - starts here - *** Don't remove this code ***
             // results.map((resResult,i)=>{
             //     $("#loopGrid-container").append(`<div id="gridContainer_${i}"></div><hr/>`);
@@ -495,7 +534,7 @@ $(document).ready(function () {
 
                     const tempObj = JSON.parse(res.data.transactions[0].row).lines[0];
                     const testObj = [{ ...JSON.parse(res.data.transactions[0].row), ...tempObj }];
-                    renderInvoiceDataGrid("gridContainer", testObj);
+                    renderInvoiceDataGrid("invoiceGridContainer", testObj);
                 } else {
                     renderDataGrid(res.data.transactions);
                 }

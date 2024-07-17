@@ -34,7 +34,43 @@
 
 <body>
 
-
+    <div name="modal-div">
+        <!-- Modal -->
+        <div id="type-selector-modal" class="modal fade show" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">What you want to process ?</h1>
+                        <!-- <button type="button" class="btn-close"></button> -->
+                    </div>
+                    <div class="modal-body">
+                        <div class="flex">
+                            <button id="modal-bank-sts-btn" class="btn btn-primary">Bank Statement</button>
+                            <button id="modal-invoice-rps-btn" class="btn btn-outline-primary">Invoice
+                                <!-- Receipts -->
+                            </button>
+                        </div>
+                        <hr />
+                        <h1 class="modal-title fs-5">Attachments</h1>
+                        <br />
+                        <div id="dms-attachs-list"></div>
+                        <div class="text-end">
+                            <button id="process-dms-docs" class="btn btn-primary d-none">Convert<div
+                                    id="loading-spinner" class="d-none spinner-border spinner-border-sm text-dark"
+                                    role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div></button>
+                            <button id="process-dms-docs-bank-sts" class="btn btn-primary d-none">Convert<div
+                                    id="loading-spinner" class="d-none spinner-border spinner-border-sm text-dark"
+                                    role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container-fluid mt-3">
         <div class=" row">
@@ -42,7 +78,7 @@
                 <div class="form-group custom-select-icon">
                     <select id="type_selector" class="form-control">
                         <option value="" class="input_field">Bank Statements</option>
-                        <option value="Invoice" class="input_field">Invoice</option>  
+                        <option value="Invoice" class="input_field">Invoice</option>
                     </select>
                 </div>
 
@@ -78,14 +114,13 @@
                             </button> -->
                         </div>
                         <div>
-                            <button id="abcabc" type="button" class="btn-blue mb-1 me-1">
+                            <button id="abcabc" type="button" class="btn-blue mb-1 me-1 opacity-5" disabled>
                                 <span class="material-symbols-outlined">
                                     add
                                 </span>
-                                </span>
                                 Extract
                             </button>
-                            <button id="Invoice_Test" type="button" class="btn-blue mb-1 me-1">
+                            <button id="Invoice_Test" type="button" class="btn-blue mb-1 me-1 opacity-5" disabled>
                                 <span class="material-symbols-outlined">
                                     add
                                 </span>
@@ -185,7 +220,7 @@
             </div>
             <div class=" col-9 white-box-1">
                 <div class=" d-flex  d-flex justify-content-between">
-                    <div class=" d-flex">
+                    <!-- <div class=" d-flex">
                         <div class="form-group custom-select-icon" style="width: 300px;">
                             <select class="form-control" id="exampleFormControlSelect1">
                                 <option value="Selected View" selected class="input_field">Selected View</option>
@@ -215,7 +250,7 @@
                             </button>
                         </div>
 
-                    </div>
+                    </div> -->
                     <!-- <div>
                         <button type="button" class="btn-blue mb-1 me-1">
                             <i class="nav-icons material-symbols-outlined">
@@ -262,10 +297,12 @@
                     </div> -->
                 </div>
 
-                <div class="custom-table mt-5 border">
+                <!-- <div class="custom-table mt-5 border"> -->
+                <div class="custom-table mt-5">
                     <div>
                         <div class="demo-container">
                             <div id="gridContainer"></div>
+                            <div id="invoiceGridContainer"></div>
                         </div>
                     </div>
 
@@ -277,6 +314,9 @@
                 </div>
 
 
+                <div id="Loading" class="spinner-border d-none" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
 

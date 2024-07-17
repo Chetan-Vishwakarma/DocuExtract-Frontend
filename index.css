@@ -338,3 +338,7 @@ position: absolute;
 bottom: 30px;
 background-color: #fff; 
 }
+
+.opacity-5{
+    opacity: 0.5;
+}
