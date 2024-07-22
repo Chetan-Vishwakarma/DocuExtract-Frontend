@@ -39,30 +39,39 @@
         <div id="type-selector-modal" class="modal fade show" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <!-- <div class="modal-header">
                         <h1 class="modal-title fs-5">What you want to process ?</h1>
-                        <!-- <button type="button" class="btn-close"></button> -->
-                    </div>
+                    </div> -->
                     <div class="modal-body">
-                        <div class="flex">
+                        <!-- <div class="flex">
                             <button id="modal-bank-sts-btn" class="btn btn-primary">Bank Statement</button>
                             <button id="modal-invoice-rps-btn" class="btn btn-outline-primary">Invoice
-                                <!-- Receipts -->
                             </button>
-                        </div>
-                        <hr />
+                        </div> -->
                         <h1 class="modal-title fs-5">Attachments</h1>
-                        <br />
-                        <div id="dms-attachs-list"></div>
+                        <hr />
+                        <!-- <br /> -->
+                        <div class="container">
+                            <div id="dms-attachs-list" class="row d-flex justify-content-start">
+                                <!-- <div class="col-4 mt-3">
+                                    <div class="text-center border rounded pt-4">
+                                        <img src="./pdf.png" height="40px" width="40px" class="me-2" />
+                                        <p class="text-center mt-3">Test 123</p>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!-- <div id="dms-attachs-list">
+                            
+                        </div> -->
                         <div class="text-end">
-                            <button id="process-dms-docs" class="btn btn-primary d-none">Convert<div
-                                    id="loading-spinner" class="d-none spinner-border spinner-border-sm text-dark"
-                                    role="status">
+                            <button id="process-dms-docs" class="btn btn-primary">Convert<div id="loading-spinner"
+                                    class="d-none spinner-border spinner-border-sm text-dark" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div></button>
-                            <button id="process-dms-docs-bank-sts" class="btn btn-primary d-none">Convert<div
-                                    id="loading-spinner" class="d-none spinner-border spinner-border-sm text-dark"
-                                    role="status">
+                            <button id="process-dms-docs-bank-sts" class="btn btn-primary">Convert<div
+                                    id="loading-spinner-bnk-sts"
+                                    class="d-none spinner-border spinner-border-sm text-dark" role="status">
                                     <span class="visually-hidden">Loading...</span>
                                 </div></button>
                         </div>

@@ -14,13 +14,15 @@ let dmsInvoiceConvertedData = [];
 const urlSearchParams = new URLSearchParams(window.location.search);
 
 // Access the 'ids' parameter
-const idsString = urlSearchParams.get('ids');
+const ecryptedObj = urlSearchParams.get('schema');
 
-let dmsDocIds = [];
+const decodedObj = ecryptedObj ? JSON.parse(atob(ecryptedObj)) : {ids:[], type:''};
 
-if (idsString && idsString.length > 0) {
-    dmsDocIds = idsString.split(",")
-}
+let dmsDocIds = decodedObj.ids;
+
+// if (idsString && idsString.length > 0) {
+//     dmsDocIds = idsString.split(",")
+// }
 
 function renderDataGrid(Data) {
     $('#gridContainer').dxDataGrid({
@@ -40,7 +42,7 @@ function renderDataGrid(Data) {
         },
         pager: {
             showPageSizeSelector: true,
-            allowedPageSizes: [10, 25, 50, 100],
+            allowedPageSizes: [10, 20, 50, 100],
         },
         remoteOperations: false,
         searchPanel: {
@@ -214,7 +216,12 @@ function getInputType() {
 function showDmsDocList(dmsDocsList) {
     $("#dms-attachs-list").html("");
     dmsDocsList.map(itm => {
-        $("#dms-attachs-list").append(`<p>${itm.Description}.${itm.Type}</p>`);
+        $("#dms-attachs-list").append(`<div class="col-4 mt-3">
+                                    <div class="text-center border rounded pt-4">
+                                        <img src="./pdf.png" height="40px" width="40px" class="me-2" />
+                                        <p class="text-center mt-3">${itm.Description}</p>
+                                    </div>
+                                </div>`);
     });
     // $("#process-dms-docs").removeClass("d-none");
 }
@@ -223,18 +230,18 @@ function showDmsDocList(dmsDocsList) {
 
 $(document).ready(function () {
 
-    axios.get(`http://localhost:3001/allJobs`).then(res => {
-        console.log("All Jobs", res.data);
-    });
+    // axios.get(`http://localhost:3001/allJobs`).then(res => {
+    //     console.log("All Jobs", res.data);
+    // });
 
     if (dmsDocIds.length > 0) {
 
         $("#type-selector-modal").css("display", "block");
 
-        if ($("#modal-bank-sts-btn").hasClass("btn-primary")) {
-            $("#process-dms-docs-bank-sts").removeClass("d-none");
-            $("#process-dms-docs").addClass("d-none");
-        }
+        // if ($("#modal-bank-sts-btn").hasClass("btn-primary")) {
+        //     $("#process-dms-docs-bank-sts").removeClass("d-none");
+        //     $("#process-dms-docs").addClass("d-none");
+        // }
 
         dmsDocIds.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
@@ -250,7 +257,13 @@ $(document).ready(function () {
             Promise.resolve()
         ).then(res => {
             // console.log("dmsDocResult", dmsDocResult);
-            showDmsDocList(dmsDocResult);
+            let tempResult = dmsDocResult.filter(itm=>{
+                if(itm["Type"]==="pdf"){
+                    return itm;
+                }
+            });
+            showDmsDocList(tempResult);
+            // console.log("tempResult", tempResult);
         }).catch(err => {
             console.log("Error while calling Json_SearchDocById", err);
         });
@@ -293,33 +306,41 @@ $(document).ready(function () {
     // })
     getInputType();
 
-    $("#modal-bank-sts-btn").on("click", function () {
-        // $("#type-selector-modal").css("display", "none");
-        $(this).addClass("btn-primary");
-        $(this).removeClass("btn-outline-primary");
-
-        $("#modal-invoice-rps-btn").addClass("btn-outline-primary");
-        $("#modal-invoice-rps-btn").removeClass("btn-primary");
-
+    if(decodedObj.type==="Bank"){
         $("#process-dms-docs-bank-sts").removeClass("d-none");
         $("#process-dms-docs").addClass("d-none");
-    })
-
-    $("#modal-invoice-rps-btn").on("click", function () {
-        // $("#type-selector-modal").css("display", "none");
-        $(this).addClass("btn-primary");
-        $(this).removeClass("btn-outline-primary");
-
-        $("#modal-bank-sts-btn").addClass("btn-outline-primary");
-        $("#modal-bank-sts-btn").removeClass("btn-primary");
-
+    }else if(decodedObj.type==="Invoice"){
         $("#process-dms-docs-bank-sts").addClass("d-none");
         $("#process-dms-docs").removeClass("d-none");
-    })
+    }
+
+    // $("#modal-bank-sts-btn").on("click", function () {
+    //     // $("#type-selector-modal").css("display", "none");
+    //     $(this).addClass("btn-primary");
+    //     $(this).removeClass("btn-outline-primary");
+
+    //     $("#modal-invoice-rps-btn").addClass("btn-outline-primary");
+    //     $("#modal-invoice-rps-btn").removeClass("btn-primary");
+
+    //     $("#process-dms-docs-bank-sts").removeClass("d-none");
+    //     $("#process-dms-docs").addClass("d-none");
+    // })
+
+    // $("#modal-invoice-rps-btn").on("click", function () {
+    //     // $("#type-selector-modal").css("display", "none");
+    //     $(this).addClass("btn-primary");
+    //     $(this).removeClass("btn-outline-primary");
+
+    //     $("#modal-bank-sts-btn").addClass("btn-outline-primary");
+    //     $("#modal-bank-sts-btn").removeClass("btn-primary");
+
+    //     $("#process-dms-docs-bank-sts").addClass("d-none");
+    //     $("#process-dms-docs").removeClass("d-none");
+    // })
 
     $("#process-dms-docs-bank-sts").on("click", function () {
         dmsDocBase64Result = [];
-        $("#loading-spinner").removeClass("d-none");
+        $("#loading-spinner-bnk-sts").removeClass("d-none");
         axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
             "agrno": "0003",
             "Email": "patrick@docusoft.net",
@@ -331,7 +352,7 @@ $(document).ready(function () {
                 $("#type-selector-modal").css("display", "none");
                 $("#gridContainer").removeClass("d-none");
                 $("#invoiceGridContainer").addClass("d-none");
-                $("#loading-spinner").addClass("d-none");
+                $("#loading-spinner-bnk-sts").addClass("d-none");
                 renderDataGrid(res.data.transactions);
             }).catch(function (err) {
                 console.log("Api failed", err);
