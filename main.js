@@ -230,9 +230,9 @@ function showDmsDocList(dmsDocsList) {
 
 $(document).ready(function () {
 
-    // axios.get(`http://localhost:3001/allJobs`).then(res => {
-    //     console.log("All Jobs", res.data);
-    // });
+    axios.get(`http://localhost:3001/allJobs`).then(res => {
+        console.log("All Jobs", res.data);
+    });
 
     if (dmsDocIds.length > 0) {
 
@@ -366,7 +366,7 @@ $(document).ready(function () {
         $("#gridContainer").addClass("d-none");
         $("#invoiceGridContainer").addClass("d-none");
         $("#loading-spinner").removeClass("d-none");
-        dmsDocResult.reduce((prevPromise, group) => {
+        dmsDocResult.filter(itm=>itm.Type==="pdf").reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
                     "agrno": "0003",
@@ -428,6 +428,7 @@ $(document).ready(function () {
     })
     $(document).on("change", "#bankStatements", function (e) {
         let allFiles = this.files;
+        console.log("test test test",$("#selected-doc-list").html());
         // Object.keys(allFiles).length > 0 ? $("#type_selector").attr("disabled","true") : $("#type_selector").attr("disabled","false");
         if (Object.keys(allFiles).length > 0) {
             $("#abcabc").removeAttr("disabled").removeClass("opacity-5");
