@@ -1,4 +1,6 @@
-let BankStatements = [];
+let InvoicesBase64Array = [];
+let selectedInvoices = {};
+let selectedfiles = {};
 let jwtToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNzIyODgiLCJlbWFpbCI6ImNwcm8yNzE0QGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6IkRldiIsImxhc3ROYW1lIjoiQ2hldGFuIiwicGljdHVyZSI6IiIsInBlcm1pc3Npb25zIjpbIk1BTkFHRV9URU1QTEFURVMiLCJNQU5BR0VfSU5URUdSQVRJT05TIiwiUkVBRF9KT0JfUkVTVUxUUyIsIkNSRUFURV9KT0IiLCJVU0VfT0NSX1RPT0wiLCJVU0VfT0NSX1RBQkxFU19UT09MIiwiVVNFX1RBQkxFU19UT09MIiwiVVNFX0hBTkRXUklUSU5HX1RPT0wiXSwiaWF0IjoxNzIwNTE0MDMwLCJleHAiOjQ4NzYyNzQwMzB9.0CA5UrSM1MoBPgsRIOC7kRHDB-p-NtnlptmbdWX-s38`;
 let url = "http://localhost:3001/testing";
 // let url = "https://docuextract-backend-1.onrender.com/testing";
@@ -16,7 +18,7 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 // Access the 'ids' parameter
 const ecryptedObj = urlSearchParams.get('schema');
 
-const decodedObj = ecryptedObj ? JSON.parse(atob(ecryptedObj)) : {ids:[], type:''};
+const decodedObj = ecryptedObj ? JSON.parse(atob(ecryptedObj)) : { ids: [], type: '' };
 
 let dmsDocIds = decodedObj.ids;
 
@@ -147,12 +149,14 @@ function renderInvoiceDataGrid(targetGrid, Data) {
 }
 
 function sendDoc(event) {
-    let allFiles = document.getElementById("bankStatements").files;
+    // let allFiles = document.getElementById("bankStatements").files;
+    let allFiles = selectedfiles;
     formData = "";
     formData = new FormData();
     formData.append('document', allFiles[0]);
     event.preventDefault();
-    axios.post(url, formData)
+
+    axios.post("http://localhost:3001/processBankStatements", formData)
         .then(response => {
             $("#Loading").addClass("d-none");
             $('#gridContainer').removeClass("d-none");
@@ -161,6 +165,16 @@ function sendDoc(event) {
         .catch(error => {
             console.error(error);
         });
+
+    // axios.post(url, formData)
+    //     .then(response => {
+    //         $("#Loading").addClass("d-none");
+    //         $('#gridContainer').removeClass("d-none");
+    //         renderDataGrid(response.data.transactions);
+    //     })
+    //     .catch(error => {
+    //         console.error(error);
+    //     });
 }
 
 async function sendInvoice(event, file) {
@@ -194,19 +208,19 @@ function getInputType() {
         $("#input-type-div").html(`<input type="file" class="form-control visually-hidden" id="bankStatements">
                                 <label class="btn-blue mb-1 me-1" for="bankStatements">
                                     <span class="material-symbols-outlined">
-                                        add
-                                    </span>
-                                    Add
+cloud_upload
+</span>
+                                    Upload
                                 </label>`);
         $("#Invoice_Test").hide();
         $("#abcabc").show();
     } else if (inputType === 'Invoice') {
-        $("#input-type-div").html(`<input type="file" class="form-control visually-hidden" id="bankStatements" multiple>
-                                <label class="btn-blue mb-1 me-1" for="bankStatements">
+        $("#input-type-div").html(`<input type="file" class="form-control visually-hidden" id="Invoices_Input" multiple>
+                                <label class="btn-blue mb-1 me-1" for="Invoices_Input">
                                     <span class="material-symbols-outlined">
-                                        add
-                                    </span>
-                                    Add
+cloud_upload
+</span>
+                                    Upload
                                 </label>`);
         $("#Invoice_Test").show();
         $("#abcabc").hide();
@@ -226,7 +240,74 @@ function showDmsDocList(dmsDocsList) {
     // $("#process-dms-docs").removeClass("d-none");
 }
 
+function handleDisableExtractButton(allFiles) {
+    if (Object.keys(allFiles).length > 0) {
+        $("#abcabc").removeAttr("disabled").removeClass("opacity-5");
+        $("#Invoice_Test").removeAttr("disabled").removeClass("opacity-5");
+    } else {
+        $("#abcabc").attr("disabled", "true").addClass("opacity-5");
+        $("#Invoice_Test").attr("disabled", "true").addClass("opacity-5");
+    }
+}
 
+function createSideBarDocList(allFiles) {
+    $("#selected-doc-list").html("");
+    for (let i = 0; i < Object.keys(allFiles).length; i++) {
+        $("#selected-doc-list").append(`<div class=" d-flex">
+
+                            <!-- <div class="form-check d-flex align-items-center justify-content-between mx-2">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+    
+                                </label>
+                            </div> -->
+                            <div class="file-uploads-2 mt-2">
+                                <label class="file-uploads-label file-uploads-document sadik">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="d-flex align-items-center">
+                                            <div class='img-format'>
+                                                <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                                            </div>
+    
+                                            <div class="upload-content">
+                                                <h4>${allFiles[i].name}</h4>
+                                            </div>
+                                        </div>
+    
+                                        <!-- <div class="clearrfix">
+                                            <span class="dropdown">
+                                                <span class="dropdown-toggle dropdoun_border toggle-none"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-symbols-outlined mt-2">
+                                                        more_vert
+                                                    </span>
+                                                </span>
+                                                <ul class="dropdown-menu">
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                edit_note
+                                                            </span>Rename</a>
+                                                    </li>
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                close
+                                                            </span>
+                                            </span>Remove</a>
+                                            </li>
+    
+    
+                                            </ul>
+                                            </span>
+                                        </div>  -->
+    
+                                    </div>
+                                </label>
+                            </div>
+                        </div>`);
+    }
+}
 
 $(document).ready(function () {
 
@@ -257,8 +338,8 @@ $(document).ready(function () {
             Promise.resolve()
         ).then(res => {
             // console.log("dmsDocResult", dmsDocResult);
-            let tempResult = dmsDocResult.filter(itm=>{
-                if(itm["Type"]==="pdf"){
+            let tempResult = dmsDocResult.filter(itm => {
+                if (itm["Type"] === "pdf") {
                     return itm;
                 }
             });
@@ -306,10 +387,10 @@ $(document).ready(function () {
     // })
     getInputType();
 
-    if(decodedObj.type==="Bank"){
+    if (decodedObj.type === "Bank") {
         $("#process-dms-docs-bank-sts").removeClass("d-none");
         $("#process-dms-docs").addClass("d-none");
-    }else if(decodedObj.type==="Invoice"){
+    } else if (decodedObj.type === "Invoice") {
         $("#process-dms-docs-bank-sts").addClass("d-none");
         $("#process-dms-docs").removeClass("d-none");
     }
@@ -366,7 +447,7 @@ $(document).ready(function () {
         $("#gridContainer").addClass("d-none");
         $("#invoiceGridContainer").addClass("d-none");
         $("#loading-spinner").removeClass("d-none");
-        dmsDocResult.filter(itm=>itm.Type==="pdf").reduce((prevPromise, group) => {
+        dmsDocResult.filter(itm => itm.Type === "pdf").reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
                     "agrno": "0003",
@@ -380,7 +461,7 @@ $(document).ready(function () {
         ).then(res => {
             dmsDocBase64Result.reduce((prevPromise, group) => {
                 return prevPromise.then(() => {
-                    return axios.post(`http://localhost:3001/processDmsDoc?type=Invoice`, { base64: group }).then(function (res) {
+                    return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
                         if ($("#type_selector").val() === "Invoice" || true) {
                             // const tempObj = JSON.parse(response.data.transactions[0].row).lines;
                             // let testObj = { ...JSON.parse(response.data.transactions[0].row) };
@@ -426,74 +507,82 @@ $(document).ready(function () {
     $("#type_selector").on("change", function () {
         getInputType();
     })
+
+
+
+    const convertBlobToBase64 = async (blob) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const getBase64Files = async (allFiles) => {
+        const base64Files = await Promise.all(
+            Object.entries(allFiles).map(async ([key, file]) => {
+                try {
+                    const base64 = await convertBlobToBase64(file);
+                    return { [key]: base64 };
+                } catch (error) {
+                    console.error(`Error reading file ${key}:`, error);
+                    return { [key]: null }; // Or handle error as needed
+                }
+            })
+        );
+        return Object.assign({}, ...base64Files);
+    };
+
+
+
+
+    $(document).on("change", "#Invoices_Input", function () {
+        let allFiles = this.files;
+        let mappedData = Object.entries(allFiles).map(itm => itm[1].type);
+        if (!mappedData.every(itm => itm === "application/pdf")) {
+            alert("Only PDF files are supported");
+            let filteredData = Object.entries(allFiles).filter(itm => itm[1].type === "application/pdf").reduce((acc, itmObj, i) => {
+                return { ...acc, [i]: itmObj[1] }
+            }, {});
+            allFiles = filteredData;
+        }
+
+        getBase64Files(allFiles)
+            .then(base64Data => {
+                let base64DataArr = Object.entries(base64Data).map(([key, value])=>{
+                    return value.split(",")[1];
+                });
+                InvoicesBase64Array = base64DataArr;
+                // console.log("base64DataArr",base64DataArr);
+            })
+            .catch(error => {
+                console.error('Error reading files:', error);
+            });
+
+        selectedInvoices = allFiles;
+        handleDisableExtractButton(allFiles);
+        createSideBarDocList(allFiles);
+    })
+
+
     $(document).on("change", "#bankStatements", function (e) {
         let allFiles = this.files;
-        console.log("test test test",$("#selected-doc-list").html());
+
+        if ((Object.entries(selectedfiles).length > 0 && $("#type_selector").val() === "")) {
+            if (window.confirm("Are you sure you want to replace this file?")) {
+                allFiles = this.files;
+                selectedfiles = this.files;
+            } else {
+                allFiles = selectedfiles;
+            }
+        } else if (Object.entries(selectedfiles).length === 0) {
+            selectedfiles = this.files;
+        }
         // Object.keys(allFiles).length > 0 ? $("#type_selector").attr("disabled","true") : $("#type_selector").attr("disabled","false");
-        if (Object.keys(allFiles).length > 0) {
-            $("#abcabc").removeAttr("disabled").removeClass("opacity-5");
-            $("#Invoice_Test").removeAttr("disabled").removeClass("opacity-5");
-        } else {
-            $("#abcabc").attr("disabled", "true").addClass("opacity-5");
-            $("#Invoice_Test").attr("disabled", "true").addClass("opacity-5");
-        }
+        handleDisableExtractButton(allFiles);
 
-        $("#selected-doc-list").html("");
-        for (let i = 0; i < allFiles.length; i++) {
-            $("#selected-doc-list").append(`<div class=" d-flex">
-
-                            <!-- <div class="form-check d-flex align-items-center justify-content-between mx-2">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-    
-                                </label>
-                            </div> -->
-                            <div class="file-uploads-2 mt-2">
-                                <label class="file-uploads-label file-uploads-document sadik">
-                                    <div class="d-flex justify-content-between align-items-center w-100">
-                                        <div class="d-flex align-items-center">
-                                            <div class='img-format'>
-                                                <img src="./pdf.png" height="30px" width="30px" class="me-2" />
-                                            </div>
-    
-                                            <div class="upload-content">
-                                                <h4>${allFiles[i].name}</h4>
-                                            </div>
-                                        </div>
-    
-                                        <!-- <div class="clearrfix">
-                                            <span class="dropdown">
-                                                <span class="dropdown-toggle dropdoun_border toggle-none"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <span class="material-symbols-outlined mt-2">
-                                                        more_vert
-                                                    </span>
-                                                </span>
-                                                <ul class="dropdown-menu">
-    
-                                                    <li><a class="dropdown-item" href="#"><span
-                                                                class="material-symbols-outlined">
-                                                                edit_note
-                                                            </span>Rename</a>
-                                                    </li>
-    
-                                                    <li><a class="dropdown-item" href="#"><span
-                                                                class="material-symbols-outlined">
-                                                                close
-                                                            </span>
-                                            </span>Remove</a>
-                                            </li>
-    
-    
-                                            </ul>
-                                            </span>
-                                        </div>  -->
-    
-                                    </div>
-                                </label>
-                            </div>
-                        </div>`);
-        }
+        createSideBarDocList(allFiles);
         // $("#selected-doc-list").append(`<p>${allFiles[i].name}<p>`);
     })
     $("#abcabc").on("click", function (event) {
@@ -507,50 +596,90 @@ $(document).ready(function () {
         $('#gridContainer').addClass("d-none");
         event.preventDefault();
         formData = "";
-        let allFiles = document.getElementById("bankStatements").files;
-        delete allFiles["length"];
+        let allFiles = selectedInvoices;
+        // delete allFiles["length"];
         let results = [];
-        Object.entries(allFiles).reduce((prevPromise, group, i) => {
+
+
+        InvoicesBase64Array.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
-                formData = "";
-                formData = new FormData();
-                formData.append('document', group[1]);
-                return axios.post(`${url}?type=Invoice`, formData)
-                    .then(response => {
-
-                        // const tempObj = JSON.parse(response.data.transactions[0].row).lines[0];
-                        // let testObj = [{...JSON.parse(response.data.transactions[0].row), tempObj}];
-                        // renderInvoiceDataGrid(testObj);
-
-                        const tempObj = JSON.parse(response.data.transactions[0].row).lines;
-                        let testObj = { ...JSON.parse(response.data.transactions[0].row) };
+                return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
+                    if ($("#type_selector").val() === "Invoice" || true) {
+                        const tempObj = JSON.parse(res.data.transactions[0].row).lines;
+                        let testObj = { ...JSON.parse(res.data.transactions[0].row) };
                         let data = tempObj.map(itm => {
                             return { ...testObj, ...itm }
                         });
-                        results.push(data);
-
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                        dmsInvoiceConvertedData.push(data);
+                    } else {
+                        // renderDataGrid(res.data.transactions);
+                    }
+                }).catch(function (err) {
+                    console.log("Api failed", err);
+                });
             });
         },
             Promise.resolve()
         ).then(res => {
-            // $('#gridContainer').dxDataGrid('instance').destroy()
+            $("#type-selector-modal").css("display", "none");
+            $("#invoiceGridContainer").removeClass("d-none");
             $("#Loading").addClass("d-none");
-            $('#invoiceGridContainer').removeClass("d-none");
-            const gridJson = results.flat();
-            renderInvoiceDataGrid("invoiceGridContainer", gridJson);
-            //  Code for individual Invoices grid container - starts here - *** Don't remove this code ***
-            // results.map((resResult,i)=>{
-            //     $("#loopGrid-container").append(`<div id="gridContainer_${i}"></div><hr/>`);
-            //     renderInvoiceDataGrid(`gridContainer_${i}`, resResult);
-            // })
-            //  End here - *** Don't remove this code ***
+            $("#loading-spinner").addClass("d-none");
+            renderInvoiceDataGrid("invoiceGridContainer", dmsInvoiceConvertedData.flat());
         }).catch(err => {
-
+            console.log("Error while calling Json_GetItemBase64DataById", err);
         });
+
+
+        // Object.entries(allFiles).reduce((prevPromise, group, i) => {
+        //     return prevPromise.then(() => {
+        //         formData = "";
+        //         formData = new FormData();
+        //         formData.append('document', group[1]);
+        //         return axios.post(`http://localhost:3001/processInvoices`, formData)
+        //             .then(response => {
+        //                 const tempObj = JSON.parse(response.data.transactions[0].row).lines;
+        //                 let testObj = { ...JSON.parse(response.data.transactions[0].row) };
+        //                 let data = tempObj.map(itm => {
+        //                     return { ...testObj, ...itm }
+        //                 });
+        //                 results.push(data);
+        //             })
+        //             .catch(error => {
+        //                 console.error(error);
+        //             });
+
+
+        //         // return axios.post(`${url}?type=Invoice`, formData)
+        //         //     .then(response => {
+        //         //         const tempObj = JSON.parse(response.data.transactions[0].row).lines;
+        //         //         let testObj = { ...JSON.parse(response.data.transactions[0].row) };
+        //         //         let data = tempObj.map(itm => {
+        //         //             return { ...testObj, ...itm }
+        //         //         });
+        //         //         results.push(data);
+        //         //     })
+        //         //     .catch(error => {
+        //         //         console.error(error);
+        //         //     });
+        //     });
+        // },
+        //     Promise.resolve()
+        // ).then(res => {
+        //     // $('#gridContainer').dxDataGrid('instance').destroy()
+        //     $("#Loading").addClass("d-none");
+        //     $('#invoiceGridContainer').removeClass("d-none");
+        //     const gridJson = results.flat();
+        //     renderInvoiceDataGrid("invoiceGridContainer", gridJson);
+        //     //  Code for individual Invoices grid container - starts here - *** Don't remove this code ***
+        //     // results.map((resResult,i)=>{
+        //     //     $("#loopGrid-container").append(`<div id="gridContainer_${i}"></div><hr/>`);
+        //     //     renderInvoiceDataGrid(`gridContainer_${i}`, resResult);
+        //     // })
+        //     //  End here - *** Don't remove this code ***
+        // }).catch(err => {
+
+        // });
 
     })
     $(document).on("click", ".processDoc", function (event) {
