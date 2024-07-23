@@ -250,6 +250,65 @@ function handleDisableExtractButton(allFiles) {
     }
 }
 
+function createDMSSideBarDocList(onlyPdfDocsData) {
+    $("#dms-doc-list").html("");
+    for (let i = 0; i < onlyPdfDocsData.length; i++) {
+        $("#dms-doc-list").append(`<div class=" d-flex">
+
+                            <!-- <div class="form-check d-flex align-items-center justify-content-between mx-2">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+    
+                                </label>
+                            </div> -->
+                            <div class="file-uploads-2 mt-2">
+                                <label class="file-uploads-label file-uploads-document sadik">
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <div class="d-flex align-items-center">
+                                            <div class='img-format'>
+                                                <img src="./pdf.png" height="30px" width="30px" class="me-2" />
+                                            </div>
+    
+                                            <div class="upload-content">
+                                                <h4>${onlyPdfDocsData[i].Description}</h4>
+                                            </div>
+                                        </div>
+    
+                                        <!-- <div class="clearrfix">
+                                            <span class="dropdown">
+                                                <span class="dropdown-toggle dropdoun_border toggle-none"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-symbols-outlined mt-2">
+                                                        more_vert
+                                                    </span>
+                                                </span>
+                                                <ul class="dropdown-menu">
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                edit_note
+                                                            </span>Rename</a>
+                                                    </li>
+    
+                                                    <li><a class="dropdown-item" href="#"><span
+                                                                class="material-symbols-outlined">
+                                                                close
+                                                            </span>
+                                            </span>Remove</a>
+                                            </li>
+    
+    
+                                            </ul>
+                                            </span>
+                                        </div>  -->
+    
+                                    </div>
+                                </label>
+                            </div>
+                        </div>`);
+    }
+}
+
 function createSideBarDocList(allFiles) {
     $("#selected-doc-list").html("");
     for (let i = 0; i < Object.keys(allFiles).length; i++) {
@@ -419,34 +478,99 @@ $(document).ready(function () {
     //     $("#process-dms-docs").removeClass("d-none");
     // })
 
-    $("#process-dms-docs-bank-sts").on("click", function () {
-        dmsDocBase64Result = [];
-        $("#loading-spinner-bnk-sts").removeClass("d-none");
-        axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
-            "agrno": "0003",
-            "Email": "patrick@docusoft.net",
-            "password": "UGF0cmljazEyMy4=",
-            "ItemId": dmsDocResult[0]["Registration No."]
-        }).then(res => {
-            let docBase64 = res.data.d;
-            axios.post(`http://localhost:3001/processDmsDoc`, { base64: docBase64 }).then(function (res) {
-                $("#type-selector-modal").css("display", "none");
-                $("#gridContainer").removeClass("d-none");
-                $("#invoiceGridContainer").addClass("d-none");
-                $("#loading-spinner-bnk-sts").addClass("d-none");
-                renderDataGrid(res.data.transactions);
-            }).catch(function (err) {
-                console.log("Api failed", err);
-            });
-        }).catch(err => console.log("Error while calling JSON_GetItemBase64Data", err))
-    })
+    // $("#process-dms-docs-bank-sts").on("click", function () {
+    //     dmsDocBase64Result = [];
+    //     $("#loading-spinner-bnk-sts").removeClass("d-none");
+    //     axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
+    //         "agrno": "0003",
+    //         "Email": "patrick@docusoft.net",
+    //         "password": "UGF0cmljazEyMy4=",
+    //         "ItemId": dmsDocResult[0]["Registration No."]
+    //     }).then(res => {
+    //         let docBase64 = res.data.d;
+    //         axios.post(`http://localhost:3001/processDmsDoc`, { base64: docBase64 }).then(function (res) {
+    //             $("#type-selector-modal").css("display", "none");
+    //             $("#gridContainer").removeClass("d-none");
+    //             $("#invoiceGridContainer").addClass("d-none");
+    //             $("#loading-spinner-bnk-sts").addClass("d-none");
+    //             renderDataGrid(res.data.transactions);
+    //         }).catch(function (err) {
+    //             console.log("Api failed", err);
+    //         });
+    //     }).catch(err => console.log("Error while calling JSON_GetItemBase64Data", err))
+    // })
+
+    // $("#process-dms-docs").on("click", function () {
+    //     // $("#type-selector-modal").css("display", "none");
+    //     dmsDocBase64Result = [];
+    //     $("#gridContainer").addClass("d-none");
+    //     $("#invoiceGridContainer").addClass("d-none");
+    //     $("#loading-spinner").removeClass("d-none");
+    //     dmsDocResult.filter(itm => itm.Type === "pdf").reduce((prevPromise, group) => {
+    //         return prevPromise.then(() => {
+    //             return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
+    //                 "agrno": "0003",
+    //                 "Email": "patrick@docusoft.net",
+    //                 "password": "UGF0cmljazEyMy4=",
+    //                 "ItemId": group["Registration No."]
+    //             }).then(res => dmsDocBase64Result.push(res.data.d)).catch(err => console.log("Error while calling JSON_GetItemBase64Data", err))
+    //         });
+    //     },
+    //         Promise.resolve()
+    //     ).then(res => {
+    //         dmsDocBase64Result.reduce((prevPromise, group) => {
+    //             return prevPromise.then(() => {
+    //                 return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
+    //                     if ($("#type_selector").val() === "Invoice" || true) {
+    //                         // const tempObj = JSON.parse(response.data.transactions[0].row).lines;
+    //                         // let testObj = { ...JSON.parse(response.data.transactions[0].row) };
+    //                         // let data = tempObj.map(itm => {
+    //                         //     return { ...testObj, ...itm }
+    //                         // });
+    //                         // renderInvoiceDataGrid(data);
+
+    //                         // const tempObj = JSON.parse(res.data.transactions[0].row).lines[0];
+    //                         // const testObj = [{ ...JSON.parse(res.data.transactions[0].row), ...tempObj }];
+    //                         // // renderInvoiceDataGrid("gridContainer", testObj);
+    //                         // dmsInvoiceConvertedData.push(testObj);
+
+    //                         const tempObj = JSON.parse(res.data.transactions[0].row).lines;
+    //                         let testObj = { ...JSON.parse(res.data.transactions[0].row) };
+    //                         let data = tempObj.map(itm => {
+    //                             return { ...testObj, ...itm }
+    //                         });
+
+    //                         dmsInvoiceConvertedData.push(data);
+    //                     } else {
+    //                         // renderDataGrid(res.data.transactions);
+    //                     }
+    //                 }).catch(function (err) {
+    //                     console.log("Api failed", err);
+    //                 });
+    //             });
+    //         },
+    //             Promise.resolve()
+    //         ).then(res => {
+    //             $("#type-selector-modal").css("display", "none");
+    //             $("#invoiceGridContainer").removeClass("d-none");
+    //             $("#loading-spinner").addClass("d-none");
+    //             renderInvoiceDataGrid("invoiceGridContainer", dmsInvoiceConvertedData.flat());
+    //         }).catch(err => {
+    //             console.log("Error while calling Json_GetItemBase64DataById", err);
+    //         });
+    //     }).catch(err => {
+    //         console.log("Error while calling Json_GetItemBase64DataById", err);
+    //     });
+    // })
+
+
+
 
     $("#process-dms-docs").on("click", function () {
-        // $("#type-selector-modal").css("display", "none");
         dmsDocBase64Result = [];
         $("#gridContainer").addClass("d-none");
         $("#invoiceGridContainer").addClass("d-none");
-        $("#loading-spinner").removeClass("d-none");
+        // $("#loading-spinner").removeClass("d-none");
         dmsDocResult.filter(itm => itm.Type === "pdf").reduce((prevPromise, group) => {
             return prevPromise.then(() => {
                 return axios.post("https://docusms.uk/dsdesktopwebservice.asmx/Json_GetItemBase64DataById", {
@@ -459,50 +583,21 @@ $(document).ready(function () {
         },
             Promise.resolve()
         ).then(res => {
-            dmsDocBase64Result.reduce((prevPromise, group) => {
-                return prevPromise.then(() => {
-                    return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
-                        if ($("#type_selector").val() === "Invoice" || true) {
-                            // const tempObj = JSON.parse(response.data.transactions[0].row).lines;
-                            // let testObj = { ...JSON.parse(response.data.transactions[0].row) };
-                            // let data = tempObj.map(itm => {
-                            //     return { ...testObj, ...itm }
-                            // });
-                            // renderInvoiceDataGrid(data);
-
-                            // const tempObj = JSON.parse(res.data.transactions[0].row).lines[0];
-                            // const testObj = [{ ...JSON.parse(res.data.transactions[0].row), ...tempObj }];
-                            // // renderInvoiceDataGrid("gridContainer", testObj);
-                            // dmsInvoiceConvertedData.push(testObj);
-
-                            const tempObj = JSON.parse(res.data.transactions[0].row).lines;
-                            let testObj = { ...JSON.parse(res.data.transactions[0].row) };
-                            let data = tempObj.map(itm => {
-                                return { ...testObj, ...itm }
-                            });
-
-                            dmsInvoiceConvertedData.push(data);
-                        } else {
-                            // renderDataGrid(res.data.transactions);
-                        }
-                    }).catch(function (err) {
-                        console.log("Api failed", err);
-                    });
-                });
-            },
-                Promise.resolve()
-            ).then(res => {
+            // console.log("dmsDocBase64Result", dmsDocBase64Result);
+            InvoicesBase64Array = dmsDocBase64Result;
+            let onlyPDFInvoices = dmsDocResult.filter(itm => itm.Type === "pdf");
+            if (onlyPDFInvoices.length > 0) {
+                createDMSSideBarDocList(onlyPDFInvoices);
                 $("#type-selector-modal").css("display", "none");
-                $("#invoiceGridContainer").removeClass("d-none");
-                $("#loading-spinner").addClass("d-none");
-                renderInvoiceDataGrid("invoiceGridContainer", dmsInvoiceConvertedData.flat());
-            }).catch(err => {
-                console.log("Error while calling Json_GetItemBase64DataById", err);
-            });
-        }).catch(err => {
-            console.log("Error while calling Json_GetItemBase64DataById", err);
-        });
+                $("#type_selector").val("Invoice");
+                getInputType();
+                handleDisableExtractButton(onlyPDFInvoices[0]);
+            }
+        }).catch(err => console.log("Error while calling Json_GetItemBase64DataById", err))
     })
+
+
+
 
     $("#type_selector").on("change", function () {
         getInputType();
@@ -550,10 +645,14 @@ $(document).ready(function () {
 
         getBase64Files(allFiles)
             .then(base64Data => {
-                let base64DataArr = Object.entries(base64Data).map(([key, value])=>{
+                let base64DataArr = Object.entries(base64Data).map(([key, value]) => {
                     return value.split(",")[1];
                 });
-                InvoicesBase64Array = base64DataArr;
+                if (InvoicesBase64Array.length > 0) {
+                    InvoicesBase64Array = [...InvoicesBase64Array, ...base64DataArr];
+                } else {
+                    InvoicesBase64Array = base64DataArr;
+                }
                 // console.log("base64DataArr",base64DataArr);
             })
             .catch(error => {
@@ -585,7 +684,7 @@ $(document).ready(function () {
         createSideBarDocList(allFiles);
         // $("#selected-doc-list").append(`<p>${allFiles[i].name}<p>`);
     })
-    
+
     $("#abcabc").on("click", function (event) {
         event.preventDefault();
         $("#Loading").removeClass("d-none");
@@ -593,14 +692,12 @@ $(document).ready(function () {
         sendDoc(event);
     })
     $("#Invoice_Test").on("click", async function (event) {
+        dmsInvoiceConvertedData = [];  // Temp important
         $("#Loading").removeClass("d-none");
         $('#gridContainer').addClass("d-none");
+        $("#invoiceGridContainer").addClass("d-none");
         event.preventDefault();
         formData = "";
-        let allFiles = selectedInvoices;
-        // delete allFiles["length"];
-        let results = [];
-
 
         InvoicesBase64Array.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
