@@ -585,6 +585,7 @@ $(document).ready(function () {
         createSideBarDocList(allFiles);
         // $("#selected-doc-list").append(`<p>${allFiles[i].name}<p>`);
     })
+    
     $("#abcabc").on("click", function (event) {
         event.preventDefault();
         $("#Loading").removeClass("d-none");
