@@ -66,6 +66,16 @@ function renderDataGrid(Data) {
             { dataField: "checkNumber", caption: "Check Number" },
             { dataField: "account", caption: "Account" }
         ],
+        stateStoring: {
+            enabled: true,
+            type: "custom",
+            customLoad: function () {
+                return JSON.parse(localStorage.getItem("view2"));
+            },
+            customSave: function (state) {
+                localStorage.setItem("view2", JSON.stringify(state));
+            }
+        },
         selection: {
             mode: "multiple"
         },
@@ -130,6 +140,16 @@ function renderInvoiceDataGrid(targetGrid, Data) {
             { dataField: "customerExcel", caption: "Customer" },
             { dataField: "vendorExcel", caption: "Vendor" },
         ],
+        stateStoring: {
+            enabled: true,
+            type: "custom",
+            customLoad: function () {
+                return JSON.parse(localStorage.getItem("view"));
+            },
+            customSave: function (state) {
+                localStorage.setItem("view", JSON.stringify(state));
+            }
+        },
         selection: {
             mode: "multiple"
         },
