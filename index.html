@@ -36,6 +36,33 @@
 
 <body>
 
+
+
+    <!-- Create New View Modal Start -->
+    <div id="create-view-modal" class="modal" tabindex="-1">
+        <div id="create-view-modal-body" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New View</h5>
+                    <button id="create-view-modal-close-btn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input id="view-name-input" type="text" class="form-control" placeholder="View Name"/>
+                        <button id="save-view" type="button input-group-text" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- Create New View Modal End -->
+
+
+
     <div name="modal-div">
         <!-- Modal -->
         <div id="type-selector-modal" class="modal fade show" style="display: none;">
@@ -280,6 +307,17 @@
 
                 <!-- <div class="custom-table mt-5 border"> -->
                 <div class="custom-table">
+                    <div class="d-flex justify-content-end">
+                        <div style="width: 150px;">
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Select View</option>
+                                <option value="1">View-1</option>
+                                <option value="2">View-2</option>
+                                <option value="3">View-3</option>
+                              </select>
+                        </div>
+                        <button id="create-view-btn" class="btn-blue" type="button" data-bs-toggle="modal" data-bs-target="#create-view-modal">Create View</button>
+                    </div>
                     <div>
                         <div class="demo-container">
                             <div id="gridContainer"></div>

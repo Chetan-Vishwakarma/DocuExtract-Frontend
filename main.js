@@ -730,6 +730,35 @@ $(document).ready(function () {
     //     });
     // })
 
+    $(document).on("click", function() {
+        $("#create-view-modal").removeClass("d-block");
+    })
+
+    $("#create-view-btn").on('click', function(event) {
+        event.stopPropagation();
+        // $("#create-view-modal").addClass("d-block");
+        // $("#view-name-input").val("");
+
+    });
+
+    $("#create-view-modal-close-btn").on('click', function(event) {
+        event.stopPropagation();
+        $("#create-view-modal").removeClass("d-block");
+    });
+
+    $("#save-view").on('click', function(event) {
+        // event.stopPropagation();
+        // $("#create-view-modal").removeClass("d-block");
+    });
+
+    // $("#view-name-input").on('click', function(event) {
+    //     event.stopPropagation();
+    // });
+
+    $("#create-view-modal-body").on('click', function(event) {
+        event.stopPropagation();
+    });
+
     $(document).on("click", ".remove-grid-dms-invoice-doc", function () {
         let target = this.getAttribute("name");
         let filteredResult = dmsDocResult.filter(itm => itm["Registration No."] !== Number(target));
