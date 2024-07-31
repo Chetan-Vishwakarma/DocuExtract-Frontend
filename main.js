@@ -201,16 +201,29 @@ function sendDoc(event) {
                                             $("#Reset_Btn").removeAttr("disabled").removeClass("opacity-5");
                                             $(".remove-normal-sts-doc-btn").addClass('d-none');
                                             renderDataGrid(res.data.transactions);
+                                        }).catch(err => {
+                                            $("#Loading").addClass("d-none");
+                                            clearInterval(interval_ID);
+                                            Swal.fire('Unable to process document!', 'Please try again.', 'error');
                                         })
                                     } else if (jobSts === "OutOfCredits") {
                                         axios.post(`http://localhost:3001/resumeJob`, {
                                             jobId: jobId
                                         }).then(res => {
                                             console.log('Job Resumed Success', res.data.status);
+                                        }).catch(err => {
+                                            // console.log("Error while trying to resume job", err);
+                                            $("#Loading").addClass("d-none");
+                                            clearInterval(interval_ID);
+                                            Swal.fire('Unable to process document!', 'Please try again.', 'error');
                                         })
                                     }
+                                }).catch(err => {
+                                    $("#Loading").addClass("d-none");
+                                    clearInterval(interval_ID);
+                                    Swal.fire('Unable to process document!', 'Please try again.', 'error');
                                 })
-                            }, 2000);
+                            }, 3000);
                             // axios.post(`http://localhost:3001/jobStatus`, {
                             //     jobId: jobId
                             // }).then(res=>{
@@ -220,6 +233,9 @@ function sendDoc(event) {
                         } else {
                             console.error("Unable to create job");
                         }
+                    }).catch(err => {
+                        $("#Loading").addClass("d-none");
+                        Swal.fire('Unable to process document!', 'Please try again', 'error');
                     })
                 } else {
                     console.error("Document Id not found");
@@ -520,9 +536,9 @@ const getBase64Files = async (allFiles) => {
 
 $(document).ready(function () {
 
-    axios.get(`http://localhost:3001/allJobs`).then(res => {
-        console.log("All Jobs", res.data);
-    });
+    // axios.get(`http://localhost:3001/allJobs`).then(res => {
+    //     console.log("All Jobs", res.data);
+    // });
 
     if (dmsDocIds.length > 0) {
 
@@ -994,7 +1010,10 @@ $(document).ready(function () {
                         // renderDataGrid(res.data.transactions);
                     }
                 }).catch(function (err) {
-                    console.log("Api failed", err);
+                    // console.log("Api failed", err);
+                    $("#Loading").addClass("d-none");
+                    $("#invoiceGridContainer").addClass("d-none");
+                    Swal.fire('Unable to process document!', 'Please try again.', 'error');
                 });
             });
         },
@@ -1008,7 +1027,10 @@ $(document).ready(function () {
             $(".remove-normal-doc-btn").addClass("d-none");
             renderInvoiceDataGrid("invoiceGridContainer", dmsInvoiceConvertedData.flat());
         }).catch(err => {
-            console.log("Error while calling Json_GetItemBase64DataById", err);
+            console.log("Error while processing invoices", err);
+            $("#Loading").addClass("d-none");
+            $("#invoiceGridContainer").addClass("d-none");
+            Swal.fire('Unable to process document!', 'Please try again.', 'error');
         });
 
 
