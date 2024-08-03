@@ -881,6 +881,7 @@ $(document).ready(function () {
                 $("#type_selector").val("Invoice");
                 getInputType();
                 handleDisableExtractButton(onlyPDFInvoices[0]);
+                document.getElementById("Invoice_Test").click();
             }
         }).catch(err => console.log("Error while calling Json_GetItemBase64DataById", err))
     })
@@ -913,6 +914,7 @@ $(document).ready(function () {
                 $("#type_selector").val("");
                 getInputType();
                 handleDisableExtractButton(onlyPDFStatements[0]);
+                document.getElementById("abcabc").click();
             }
         }).catch(err => console.log("Error while calling Json_GetItemBase64DataById", err))
     })
