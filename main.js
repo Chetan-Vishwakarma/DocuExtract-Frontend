@@ -4,7 +4,7 @@ let InvoicesBase64Array = [];
 let selectedInvoices = {};
 let selectedfiles = {};
 let jwtToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNzIyODgiLCJlbWFpbCI6ImNwcm8yNzE0QGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6IkRldiIsImxhc3ROYW1lIjoiQ2hldGFuIiwicGljdHVyZSI6IiIsInBlcm1pc3Npb25zIjpbIk1BTkFHRV9URU1QTEFURVMiLCJNQU5BR0VfSU5URUdSQVRJT05TIiwiUkVBRF9KT0JfUkVTVUxUUyIsIkNSRUFURV9KT0IiLCJVU0VfT0NSX1RPT0wiLCJVU0VfT0NSX1RBQkxFU19UT09MIiwiVVNFX1RBQkxFU19UT09MIiwiVVNFX0hBTkRXUklUSU5HX1RPT0wiXSwiaWF0IjoxNzIwNTE0MDMwLCJleHAiOjQ4NzYyNzQwMzB9.0CA5UrSM1MoBPgsRIOC7kRHDB-p-NtnlptmbdWX-s38`;
-let url = "http://localhost:3001/testing";
+let url = "https://extract.docusoftpractice.com/testing";
 // let url = "https://docuextract-backend-1.onrender.com/testing";
 let formData;
 
@@ -178,22 +178,22 @@ function sendDoc(event) {
     StatementsBase64Array.reduce((prevPromise, group) => {
         return prevPromise.then(() => {
 
-            return axios.post(`http://localhost:3001/processBankStatementsUpdatedApi`, { base64: group }).then(function (res) {
+            return axios.post(`https://extract.docusoftpractice.com/processBankStatementsUpdatedApi`, { base64: group }).then(function (res) {
                 if (res.data.documentId) {
-                    axios.post(`http://localhost:3001/createJob`, {
+                    axios.post(`https://extract.docusoftpractice.com/createJob`, {
                         documentId: res.data.documentId,
                         jobType: ""
                     }).then(res => {
                         let jobId = res.data.jobId;
                         if (jobId) {
                             let interval_ID = setInterval(() => {
-                                axios.post(`http://localhost:3001/jobStatus`, {
+                                axios.post(`https://extract.docusoftpractice.com/jobStatus`, {
                                     jobId: jobId
                                 }).then(res => {
                                     let jobSts = res.data.status;
                                     if (jobSts === "Succeeded") {
                                         clearInterval(interval_ID);
-                                        axios.post(`http://localhost:3001/transactions`, {
+                                        axios.post(`https://extract.docusoftpractice.com/transactions`, {
                                             jobId: jobId
                                         }).then(res => {
                                             $("#Loading").addClass("d-none");
@@ -207,7 +207,7 @@ function sendDoc(event) {
                                             Swal.fire('Unable to process document!', 'Please try again.', 'error');
                                         })
                                     } else if (jobSts === "OutOfCredits") {
-                                        axios.post(`http://localhost:3001/resumeJob`, {
+                                        axios.post(`https://extract.docusoftpractice.com/resumeJob`, {
                                             jobId: jobId
                                         }).then(res => {
                                             console.log('Job Resumed Success', res.data.status);
@@ -224,7 +224,7 @@ function sendDoc(event) {
                                     Swal.fire('Unable to process document!', 'Please try again.', 'error');
                                 })
                             }, 3000);
-                            // axios.post(`http://localhost:3001/jobStatus`, {
+                            // axios.post(`https://extract.docusoftpractice.com/jobStatus`, {
                             //     jobId: jobId
                             // }).then(res=>{
                             //     let jobStatus = res.data.status;
@@ -248,7 +248,7 @@ function sendDoc(event) {
                 console.log("Api failed", err);
             });
 
-            // return axios.post(`http://localhost:3001/processBankStatements`, { base64: group }).then(function (res) {
+            // return axios.post(`https://extract.docusoftpractice.com/processBankStatements`, { base64: group }).then(function (res) {
             //     $("#Loading").addClass("d-none");
             //     $('#gridContainer').removeClass("d-none");
             //     $("#Reset_Btn").removeAttr("disabled").removeClass("opacity-5");
@@ -275,7 +275,7 @@ function sendDoc(event) {
     // formData.append('document', allFiles[0]);
     // event.preventDefault();
 
-    // axios.post("http://localhost:3001/processBankStatements", formData)
+    // axios.post("https://extract.docusoftpractice.com/processBankStatements", formData)
     //     .then(response => {
     //         $("#Loading").addClass("d-none");
     //         $('#gridContainer').removeClass("d-none");
@@ -536,7 +536,7 @@ const getBase64Files = async (allFiles) => {
 
 $(document).ready(function () {
 
-    // axios.get(`http://localhost:3001/allJobs`).then(res => {
+    // axios.get(`https://extract.docusoftpractice.com/allJobs`).then(res => {
     //     console.log("All Jobs", res.data);
     // });
 
@@ -655,7 +655,7 @@ $(document).ready(function () {
     //         "ItemId": dmsDocResult[0]["Registration No."]
     //     }).then(res => {
     //         let docBase64 = res.data.d;
-    //         axios.post(`http://localhost:3001/processDmsDoc`, { base64: docBase64 }).then(function (res) {
+    //         axios.post(`https://extract.docusoftpractice.com/processDmsDoc`, { base64: docBase64 }).then(function (res) {
     //             $("#type-selector-modal").css("display", "none");
     //             $("#gridContainer").removeClass("d-none");
     //             $("#invoiceGridContainer").addClass("d-none");
@@ -687,7 +687,7 @@ $(document).ready(function () {
     //     ).then(res => {
     //         dmsDocBase64Result.reduce((prevPromise, group) => {
     //             return prevPromise.then(() => {
-    //                 return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
+    //                 return axios.post(`https://extract.docusoftpractice.com/processInvoices`, { base64: group }).then(function (res) {
     //                     if ($("#type_selector").val() === "Invoice" || true) {
     //                         // const tempObj = JSON.parse(response.data.transactions[0].row).lines;
     //                         // let testObj = { ...JSON.parse(response.data.transactions[0].row) };
@@ -1029,7 +1029,7 @@ $(document).ready(function () {
 
         InvoicesBase64Array.reduce((prevPromise, group) => {
             return prevPromise.then(() => {
-                return axios.post(`http://localhost:3001/processInvoices`, { base64: group }).then(function (res) {
+                return axios.post(`https://extract.docusoftpractice.com/processInvoices`, { base64: group }).then(function (res) {
                     if ($("#type_selector").val() === "Invoice" || true) {
                         const tempObj = JSON.parse(res.data.transactions[0].row).lines;
                         let testObj = { ...JSON.parse(res.data.transactions[0].row) };
@@ -1070,7 +1070,7 @@ $(document).ready(function () {
         //         formData = "";
         //         formData = new FormData();
         //         formData.append('document', group[1]);
-        //         return axios.post(`http://localhost:3001/processInvoices`, formData)
+        //         return axios.post(`https://extract.docusoftpractice.com/processInvoices`, formData)
         //             .then(response => {
         //                 const tempObj = JSON.parse(response.data.transactions[0].row).lines;
         //                 let testObj = { ...JSON.parse(response.data.transactions[0].row) };
@@ -1125,7 +1125,7 @@ $(document).ready(function () {
             "ItemId": dmsDocId ? dmsDocId : ""
         }).then(function (res) {
             const docBase64 = res.data.d;
-            axios.post(`http://localhost:3001/processDmsDoc?type=${$("#type_selector").val()}`, { base64: docBase64 }).then(function (res) {
+            axios.post(`https://extract.docusoftpractice.com/processDmsDoc?type=${$("#type_selector").val()}`, { base64: docBase64 }).then(function (res) {
                 // console.log("processDmsDoc's response", res.data);
                 if ($("#type_selector").val() === "Invoice") {
                     // const tempObj = JSON.parse(response.data.transactions[0].row).lines;
